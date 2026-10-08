@@ -4,10 +4,9 @@ from bs4 import BeautifulSoup
 import wikipedia
 import logging
 
-# Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# CRITICAL FIX: Set a custom user agent so Wikipedia API doesn't block Streamlit Cloud
+# CRITICAL FIX: Set a custom user agent so Wikipedia API doesn't block Streamlit Cloud requests
 wikipedia.set_user_agent("WikipediaScraperApp/1.0 (streamlit-app-user)")
 
 def get_wikipedia_url(search_term):
@@ -63,7 +62,7 @@ def scrape_content(url, max_words=1000):
       return content
 
     except Exception as e:
-      logging.error(f"Scrapping Error: {e}")
+      logging.error(f"Scraping Error: {e}")
       return f"Error: {e}"
 
 def main():
@@ -79,16 +78,4 @@ def main():
         scrapped_text = scrape_content(wiki_url)
 
         if scrapped_text and not scrapped_text.startswith("Error"):
-          st.text_area("Extracted Content:", value=scrapped_text, height=500)
-
-        elif scrapped_text.startswith("Error"):
-          st.error(scrapped_text)
-
-        else:
-          st.warning("No content was extracted from the Wikipedia page.")
-
-      else:
-        st.error("Couldn't find Wikipedia page.")
-
-if __name__ == "__main__":
-  main()
+          st.text_area
