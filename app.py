@@ -78,4 +78,16 @@ def main():
         scrapped_text = scrape_content(wiki_url)
 
         if scrapped_text and not scrapped_text.startswith("Error"):
-          st.text_area
+          st.text_area("Extracted Content:", value=scrapped_text, height=500)
+
+        elif scrapped_text.startswith("Error"):
+          st.error(scrapped_text)
+
+        else:
+          st.warning("No content was extracted from the Wikipedia page.")
+
+      else:
+        st.error("Couldn't find Wikipedia page.")
+
+if __name__ == "__main__":
+  main()
