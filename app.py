@@ -6,16 +6,31 @@ import logging
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-def get_wikipedia_url(search_term):#Artificial_Intelligrnce
+def get_wikipedia_url(search_term):
   try:
     logging.info(f'Searching wikipedia for : {search_term}')
-    page_title=wikipedia.page(search_term).title
-    url=f"https://en.wikipedia.org/wiki/{page_title.replace(' ','_')}"
+    
+    # Try direct page fetch first
+    try:
+        page_title = wikipedia.page(search_term, auto_suggest=True).title
+    except wikipedia.exceptions.DisambiguationError as e:
+        # If it's a disambiguation page, pick the first option automatically
+        logging.warning(f"Disambiguation found for {search_term}, picking: {e.options[0]}")
+        page_title = e.options[0]
+    except wikipedia.exceptions.PageError:
+        # If direct page isn't found, try searching Wikipedia instead
+        search_results = wikipedia.search(search_term, results=1)
+        if search_results:
+            page_title = search_results[0]
+        else:
+            return None
+
+    url = f"https://en.wikipedia.org/wiki/{page_title.replace(' ', '_')}"
     logging.info(f"Found wikipedia URL: {url}")
     return url
 
   except Exception as e:
-    logging.error(f"An Unexpected error")
+    logging.error(f"An unexpected error occurred: {e}")
     return None
 
 def scrape_content(url,max_words=1000):
